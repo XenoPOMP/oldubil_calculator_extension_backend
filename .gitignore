@@ -14,7 +14,7 @@ dist-ssr
 
 # Env
 # Un-comment lines bellow when you will use this template
- .env*
+.env*
 
 # Vitest
 /coverage
