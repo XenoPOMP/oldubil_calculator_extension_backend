@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import scrapSite from 'ts-website-scrapper';
 
-import { pullPattern } from '@/assets/utils/pullPattern';
+import { pullPattern } from '../assets/utils/pullPattern';
 
 import { CourseService } from './course.service';
 
