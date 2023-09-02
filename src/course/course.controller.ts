@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, HttpCode } from '@nestjs/common';
 import scrapSite from 'ts-website-scrapper';
 
 import { pullPattern } from '../assets/utils/pullPattern';
@@ -9,6 +9,7 @@ import { CourseService } from './course.service';
 export class CourseController {
 	constructor(private readonly courseService: CourseService) {}
 
+	@HttpCode(200)
 	@Get()
 	async getCourse(): Promise<number | undefined> {
 		const targetSite = 'https://oldubil-balance.ru';

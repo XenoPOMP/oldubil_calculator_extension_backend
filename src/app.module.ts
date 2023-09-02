@@ -4,6 +4,7 @@ import { MysqlModule } from 'nest-mysql';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CourseModule } from './course/course.module';
+import { CurrencyModule } from './currency/currency.module';
 
 @Module({
 	imports: [
@@ -16,7 +17,8 @@ import { CourseModule } from './course/course.module';
 		// 		port: parseInt(process.env.MYSQL_PORT),
 		// 	}),
 		// }),
-	CourseModule],
+	CourseModule,
+		CurrencyModule],
 	controllers: [AppController],
 	providers: [AppService],
 })
