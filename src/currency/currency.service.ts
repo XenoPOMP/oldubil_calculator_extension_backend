@@ -29,12 +29,13 @@ export class CurrencyService {
 					.find(item => item.tagName === 'NumCode')
 					.childNodes.at(0).text;
 
-				const nominal = parseFloat(
-					group
-						.find(item => item.tagName === 'Value')
-						.childNodes.at(0)
-						?.text.replace(/\,/, '.') ?? '0'
-				);
+				const nominal =
+					parseFloat(
+						group
+							.find(item => item.tagName === 'Value')
+							.childNodes.at(0)
+							?.text.replace(/\,/, '.') ?? '0'
+					) / 100;
 
 				return {
 					code,
