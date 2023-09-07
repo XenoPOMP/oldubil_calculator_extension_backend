@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ArrayType } from '@xenopomp/advanced-types';
 import axios from 'axios';
 
 import { Currency, XmlChild, currencyCodes } from './currency.interface';
@@ -10,6 +11,7 @@ export class CurrencyService {
 			EUR: 0,
 			USD: 0,
 			KZT: 0,
+			TRY: 0,
 		};
 
 		const xml = require('xml-parse');
@@ -20,8 +22,8 @@ export class CurrencyService {
 
 		const codes = values
 			.map(value =>
-				value.childNodes.filter(
-					node => node.tagName === 'NumCode' || node.tagName === 'Value'
+				value.childNodes.filter(node =>
+					['NumCode', 'Value', 'Nominal'].includes(node.tagName)
 				)
 			)
 			.map(group => {
@@ -29,22 +31,40 @@ export class CurrencyService {
 					.find(item => item.tagName === 'NumCode')
 					.childNodes.at(0).text;
 
-				const nominal = parseFloat(
+				const value = parseFloat(
 					group
 						.find(item => item.tagName === 'Value')
 						.childNodes.at(0)
 						?.text.replace(/\,/, '.') ?? '0'
 				);
 
+				const nominal = parseFloat(
+					group.find(item => item.tagName === 'Nominal')?.childNodes.at(0)
+						?.text ?? '1'
+				);
+
+				const price = value / nominal;
+
 				return {
 					code,
-					nominal,
+					price,
 				};
 			});
 
-		res.USD = codes.find(code => code.code === currencyCodes.USD).nominal;
-		res.KZT = codes.find(code => code.code === currencyCodes.KZT).nominal;
-		res.EUR = codes.find(code => code.code === currencyCodes.EUR).nominal;
+		const returnPropertyName: keyof ArrayType<typeof codes> = 'price';
+
+		res.USD = codes.find(code => code.code === currencyCodes.USD)[
+			returnPropertyName
+		];
+		res.KZT = codes.find(code => code.code === currencyCodes.KZT)[
+			returnPropertyName
+		];
+		res.EUR = codes.find(code => code.code === currencyCodes.EUR)[
+			returnPropertyName
+		];
+		res.TRY = codes.find(code => code.code === currencyCodes.TRY)[
+			returnPropertyName
+		];
 
 		return res;
 	}
